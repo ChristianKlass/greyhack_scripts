@@ -19,9 +19,9 @@ for network in networks
 	parsedItem = network.split(" ")
 	item = {}
 	item.BSSID = parsedItem[0]
-   	item.PWR = parsedItem[1].remove("%").to_int
-   	item.ESSID = parsedItem[2]
-   	result.push(item)
+   item.PWR = parsedItem[1].remove("%").to_int
+   item.ESSID = parsedItem[2]
+   result.push(item)
 end for
 
 result.sort("PWR", 0)
