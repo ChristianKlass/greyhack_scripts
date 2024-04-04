@@ -1,6 +1,3 @@
-user = "jarvis"
-pass = "C2CoaDyj3cPsG2"
-
 crypto = include_lib("/lib/crypto.so")
 airmonResult = airmon(crypto, "start", "wlan0")
 
@@ -10,7 +7,7 @@ else
    print("Monitoring mode switched on successfully.")
 end if
 
-hostComputer = get_shell(user, pass).host_computer
+hostComputer = get_shell().host_computer
 
 networks = hostComputer.wifi_networks("wlan0")
 result = []
