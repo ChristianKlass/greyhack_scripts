@@ -1,5 +1,5 @@
 filePath = "/home/" + active_user + "/tmp/tobreak"
-dictPath = "/home/" + active_user + "/dictionary.txt"
+dictPath = "/home/" + active_user + "/tmp/dictionary.txt"
 crypto = include_lib("/lib/crypto.so")
 
 file = get_shell.host_computer.File(filePath)
