@@ -1,21 +1,5 @@
-apt=null
+apt=include_lib("/lib/aptclient.so")
 root=get_shell.host_computer.File("/")
-
-newFiles=[]
-newFiles=newFiles+root.get_folders+root.get_files
-
-while newFiles.len
-    currFile=newFiles.pull
-    if currFile.is_folder then 
-		newFiles = currFile.get_folders+currFile.get_files+newFiles
-    end if
-    test=include_lib(currFile.path)
-    if typeof(test) == "aptclientLib" and not apt then
-        apt = test
-    end if 
-end while
-
-if not apt then exit("No Apt library.")
 
 if params.len >= 1 then
     hackshopsNeeded=params[0].to_int
@@ -53,39 +37,40 @@ while hackshops < hackshopsNeeded
         rports.push(serv)
     end for
 
-	print ("Checking "+ip+rports+"...")
+//	print ("Checking "+ip+rports+"...")
 
     for port in rports
         if port[2] == "repository" then
 			memory = hackshops+1
-			print("Hackshops Found: "+memory+"/"+hackshopsNeeded)
-			apt.add_repo(ip, port[0])
+			print("Hackshops Found: "+memory+"/"+hackshopsNeeded+" ("+ip+":"+port[1]+")")
+			apt.add_repo(ip, port[1])
 			hackshops = hackshops+1
 			continue
 		end if
     end for
 end while
 
+viper_ip = nslookup("www.viper.com")
+apt.add_repo(viper_ip)
 apt.update
-print (hackshops + " hackshop(s) generated.")
+print (hackshops + " hackshop(s) found.")
+
+sources = "/etc/apt/sources.txt"
+sources = get_shell.host_computer.File(sources)
+if sources != null then
+	print(sources.get_content)
+else 
+	print("Can't print sources.txt at: " + sources)
+end if
 
 install_list=[]
 install_list.push("viper")
 install_list.push("crypto.so")
 install_list.push("metaxploit.so")
 install_list.push("vbt")
+install_list.push("decipher")
+install_list.push("AdminMonitor.exe")
 
 for item in install_list
     apt.install(item)
-end for
-
-binFiles=get_shell.host_computer.File("/bin").get_files
-libFiles=get_shell.host_computer.File("/lib").get_files
-
-for file in binFiles
-	print (file.path)
-end for
-
-for file in libFiles
-	print (file.path)
 end for
